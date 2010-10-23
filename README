@@ -1,0 +1,49 @@
+Stately. Simple state management for Backbone.js Views.
+
+References:
+
+http://documentcloud.github.com/backbone/
+
+Links:
+
+To suggest a feature, report a bug, or general discussion:
+http://github.com/bigbangtechnology/stately/issues/
+
+Use Cases:
+
+I'll get to that.
+
+Example:
+
+var MyView = Backbone.View.extend(Stately).extend({
+  states: {
+    EDITING: "editing",
+    NORMAL: "normal"
+  },
+
+  transitions: {
+    "editing": {
+      "enter_state": function() {
+        console.log("EDITING: enter_state");
+      },
+    
+      "render_state": function() {
+        console.log("EDITING: render_state");              
+      }
+    }
+  },
+
+  render: function() {
+    this.revalidateState(function(){
+      // render the generic view here
+    });
+  },
+
+  getState: function() {
+    if (this.currentState == this.states.EDITING) {
+      return this.states.NORMAL;
+    } else {
+      return this.states.EDITING;
+    }
+  }
+});
