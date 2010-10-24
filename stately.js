@@ -8,6 +8,10 @@ var Stately = function() {
     VERSION: "0.0.1",
     
     currentState: "",
+    
+    transitions: {
+      
+    },
 
     /**
       Revalidate state is a function that you call when you want to transition
@@ -26,13 +30,13 @@ var Stately = function() {
 
       $(this.el).addClass(this.currentState);
 
-      this.executeTransition("enter_state");
+      this.executeTransition("before_transition");
 
       if (callback instanceof Function) {
         callback.call(this);
       }
 
-      this.executeTransition("render_state");
+      this.executeTransition("after_transition");
     },
 
     /**
