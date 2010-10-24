@@ -1,0 +1,57 @@
+<!DOCTYPE html>  <html> <head>   <title>stately.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               stately.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="octowrap">                 <a class="octothorpe" href="#section-1">#</a>               </div>               <pre><code>(c) 2010 Cameron Westland, Big Bang Technology Inc.
+Backbone may be freely distributed under the MIT license.
+For all details and documentation:
+http://bigbangtechnology.github.com/stately
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">Stately</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="nx">VERSION</span><span class="o">:</span> <span class="s2">&quot;0.0.2&quot;</span><span class="p">,</span>
+    
+    <span class="nx">currentState</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    
+    <span class="nx">transitions</span><span class="o">:</span> <span class="p">{</span>
+      
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="octowrap">                 <a class="octothorpe" href="#section-2">#</a>               </div>               <p>Call this when you want to revalidate the state. It takes a single callback function 
+as argument which will execute once between the <code>before_transition</code> and 
+<code>after_transition</code> functions</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">revalidateState</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">currentState</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getState</span><span class="p">();</span>
+      
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">==</span> <span class="nb">String</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">throw</span><span class="p">(</span><span class="s2">&quot;getState must return a valid state&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span><span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">executeTransition</span><span class="p">(</span><span class="s2">&quot;before_transition&quot;</span><span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">callback</span> <span class="k">instanceof</span> <span class="nb">Function</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">callback</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">executeTransition</span><span class="p">(</span><span class="s2">&quot;after_transition&quot;</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="octowrap">                 <a class="octothorpe" href="#section-3">#</a>               </div>               <p>Executes a transition by name if it is defined in the View. 
+Stately will automatically execute the <code>before_transition</code> and <code>after_transition</code>
+if they are declared, custom transitions can be written by declaring them and then 
+running executeTransition manually</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">executeTransition</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">transitionName</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hasTransition</span><span class="p">(</span><span class="nx">transitionName</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">transitions</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span><span class="p">][</span><span class="nx">transitionName</span><span class="p">].</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="octowrap">                 <a class="octothorpe" href="#section-4">#</a>               </div>               <p>A helper method to check to see if the transition is defined
+for the current state</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">hasTransition</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">transitionName</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">transitions</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">transitions</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span><span class="p">].</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">transitionName</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>    
+    </pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="octowrap">                 <a class="octothorpe" href="#section-5">#</a>               </div>               <p>Sub classes must override <code>getState</code> and return a string. getState is called
+automatically when executing <code>revalidateState</code></p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">getState</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="octowrap">                 <a class="octothorpe" href="#section-6">#</a>               </div>               <p>throws an error if this is not overwritten</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">throw</span><span class="p">(</span><span class="s2">&quot;Views must implement getState&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+  <span class="p">};</span>        
+<span class="p">}();</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
