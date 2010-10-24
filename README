@@ -15,35 +15,45 @@ I'll get to that.
 
 Example:
 
-var MyView = Backbone.View.extend(Stately).extend({
-  states: {
-    EDITING: "editing",
-    NORMAL: "normal"
-  },
+Check out the tests for some example usage. You mix Stately into Backbone Views like this:
 
+var MyView = Backbone.View.extend(Stately).extend({
   transitions: {
-    "editing": {
-      "enter_state": function() {
-        console.log("EDITING: enter_state");
-      },
+    state_a: {
+
+    },
+
+    state_b: {
+    	// states do not need to define any transitions
+    },
     
-      "render_state": function() {
-        console.log("EDITING: render_state");              
+    state_c: {
+      before_transition: function() {
+      	// before transition
+      },
+      
+      after_transition: function() {
+      	// after transition 
       }
     }
   },
-
-  render: function() {
-    this.revalidateState(function(){
-      // render the generic view here
-    });
-  },
-
+  
   getState: function() {
-    if (this.currentState == this.states.EDITING) {
-      return this.states.NORMAL;
-    } else {
-      return this.states.EDITING;
-    }
+    return this.nextState;
+  },
+  
+  // example, in practice you'd probably want to listen
+  // for changes in your model and update your state based
+  // on that
+  setState: function(state) {
+    this.nextState = state;
+    
+    this.revalidateState(function() {
+	// during transition
+    });
   }
 });
+
+var view = new MyView({ model: Backbone.Model() });
+
+view.setState("state_c");
