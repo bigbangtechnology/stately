@@ -30,7 +30,14 @@ var Stately = function() {
       $(this.el).addClass(this.currentState);
 
       this.executeTransition("before_transition");
-
+      
+      // if we're using simple mode where a transition is defined
+      // as a function, just execute it here
+      
+      if (this.transitions[this.currentState] instanceof Function) {
+        this.transitions[this.currentState].call(this);
+      }
+      
       if (callback instanceof Function) {
         callback.call(this);
       }
